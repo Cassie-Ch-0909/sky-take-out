@@ -1,6 +1,7 @@
 package com.sky.controller.admin;
 
 import com.sky.constant.JwtClaimsConstant;
+import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
 import com.sky.properties.JwtProperties;
@@ -76,4 +77,23 @@ public class EmployeeController {
         return Result.success();
     }
 
+    /**
+     * 新增员工
+     */
+    /*
+     * @PostMapping用于处理客户端发送的HTTP POST请求，
+     * 相当于@RequestMapping(method = RequestMethod.POST)的简写
+     * */
+    @PostMapping
+    @ApiOperation("新增员工")
+    /*
+     * @RequestBody 将客户端发送的HTTP请求体中的JSON或XML数据绑定到方法参数上。
+     * @RequestBody 将HTTP请求体中的数据转换为Java对象，并作为方法参数传递
+     * */
+    public Result save(@RequestBody EmployeeDTO employeeDTO) {
+        // 这里的{}是一个占位符，在log日志中employeeDTO的内容会补充到{}的位置
+        log.info("新增员工：{}", employeeDTO);
+        employeeService.save(employeeDTO);
+        return Result.success();
+    }
 }
