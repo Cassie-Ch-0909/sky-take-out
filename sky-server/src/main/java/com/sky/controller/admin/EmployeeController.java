@@ -43,19 +43,24 @@ public class EmployeeController {
      */
     @PostMapping("/login")
     @ApiOperation(value = "员工登录")
+    // @RequestBody EmployeeLoginDTO employeeLoginDTO: 这是Spring的注解，用于将HTTP请求体中的JSON数据转换为EmployeeLoginDTO对象。
     public Result<EmployeeLoginVO> login(@RequestBody EmployeeLoginDTO employeeLoginDTO) {
         log.info("员工登录：{}", employeeLoginDTO);
 
         Employee employee = employeeService.login(employeeLoginDTO);
 
-        //登录成功后，生成jwt令牌
+        // 登录成功后，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
+        // 在claims中添加一个键值对，其中键是JwtClaimsConstant.EMP_ID，值是登录成功的员工的ID EMP_ID就是employee_id
         claims.put(JwtClaimsConstant.EMP_ID, employee.getId());
+        // 使用JwtUtil.createJWT方法生成一个JWT令牌
         String token = JwtUtil.createJWT(
+                // JWT 令牌的密钥，通常是一个加密字符串
                 jwtProperties.getAdminSecretKey(),
+                // JWT 令牌的过期时间，以毫秒为单位，即令牌的有效期限
                 jwtProperties.getAdminTtl(),
                 claims);
-
+        // 登录成功后返回给前端的响应对象
         EmployeeLoginVO employeeLoginVO = EmployeeLoginVO.builder()
                 .id(employee.getId())
                 .userName(employee.getUsername())

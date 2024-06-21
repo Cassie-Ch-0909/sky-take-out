@@ -3,6 +3,7 @@ package com.sky.service.impl;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
@@ -83,9 +84,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setUpdateTime(LocalDateTime.now());
 
     //    设置当前记录创建人id和修改人id
-    //    TODO 后期需要改为当前登录用户的id
-        employee.setCreateUser(10L);
-        employee.setUpdateUser(10L);
+        /*
+        * setCreateUser(10L)指定了创建此员工记录的用户ID为10，
+        * setUpdateUser(10L)指定了最后更新此记录的用户ID也为10。
+        * 这里10L表示长整型数字10，L是Java中表示long类型数值的后缀。
+        * */
+        employee.setCreateUser(BaseContext.getCurrentId());
+        employee.setUpdateUser(BaseContext.getCurrentId());
 
     //    调用持久层方法将记录插入数据库
         employeeMapper.insert(employee);
