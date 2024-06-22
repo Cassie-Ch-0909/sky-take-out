@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--
+定义了 Mapper 的命名空间为 com.sky.mapper.EmployeeMapper，
+用于指定这个映射文件中定义的 SQL 语句和映射规则属于哪个 Java 接口或类。
+-->
 <mapper namespace="com.sky.mapper.EmployeeMapper">
+
+    <!--
+    从 employee 表中查询数据，
+    如果指定了 name 参数，则按照包含该参数值的 name 列进行模糊匹配查询，
+    并按照 create_time 列降序排序返回结果。
+    -->
+    <select id="pageQuery" resultType="com.sky.entity.Employee">
+        select * from employee
+        <where>
+            <if test="name != null and name != ''">
+                and name like concat('%',#{name},'%')
+            </if>
+        </where>
+        order by create_time desc
+    </select>
 </mapper>

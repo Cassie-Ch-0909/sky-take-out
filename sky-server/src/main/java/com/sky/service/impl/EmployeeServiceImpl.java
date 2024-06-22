@@ -1,16 +1,20 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
+import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
+import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -64,36 +69,57 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 新增员工
+     *
      * @param employeeDTO
      */
     @Override
     public void save(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
 
-    //    对象属性拷贝
-        BeanUtils.copyProperties(employeeDTO,employee);
+        //    对象属性拷贝
+        BeanUtils.copyProperties(employeeDTO, employee);
 
-    //    设置账号的状态，默认正常状态 1表示正常 0表示锁定
+        //    设置账号的状态，默认正常状态 1表示正常 0表示锁定
         employee.setStatus(StatusConstant.ENABLE);
 
-    //    设置密码，默认密码123456
+        //    设置密码，默认密码123456
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
 
-    //    设置当前记录的创建时间和修改时间
+        //    设置当前记录的创建时间和修改时间
         employee.setCreateTime(LocalDateTime.now());
         employee.setUpdateTime(LocalDateTime.now());
 
-    //    设置当前记录创建人id和修改人id
+        //    设置当前记录创建人id和修改人id
         /*
-        * setCreateUser(10L)指定了创建此员工记录的用户ID为10，
-        * setUpdateUser(10L)指定了最后更新此记录的用户ID也为10。
-        * 这里10L表示长整型数字10，L是Java中表示long类型数值的后缀。
-        * */
+         * setCreateUser(10L)指定了创建此员工记录的用户ID为10，
+         * setUpdateUser(10L)指定了最后更新此记录的用户ID也为10。
+         * 这里10L表示长整型数字10，L是Java中表示long类型数值的后缀。
+         * */
         employee.setCreateUser(BaseContext.getCurrentId());
         employee.setUpdateUser(BaseContext.getCurrentId());
 
-    //    调用持久层方法将记录插入数据库
+        //    调用持久层方法将记录插入数据库
         employeeMapper.insert(employee);
+    }
+
+    /**
+     * 分页查询
+     *
+     * @param employeePageQueryDTO
+     * @return
+     */
+    @Override
+    public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
+        // select * from employee limit 0,10
+        // 使用PageHelper.startPage方法进行分页参数设置，指定从第几页开始查询，以及每页查询的数量。
+        PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
+        // 调用employeeMapper.pageQuery方法进行具体的查询操作，该方法会根据EmployeePageQueryDTO的条件进行筛选。
+        Page<Employee> page = employeeMapper.pageQuery(employeePageQueryDTO);
+        // 获取查询结果的总记录数total和查询结果集records。
+        long total = page.getTotal();
+        List<Employee> records = page.getResult();
+        // 使用PageResult类构建返回结果，包含总记录数和查询结果集。
+        return new PageResult(total, records);
     }
 
 }
