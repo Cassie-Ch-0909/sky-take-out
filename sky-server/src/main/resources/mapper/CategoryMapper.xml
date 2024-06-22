@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--通过命名空间找到dao下面的PublisherDAO这个类
+    通过id找到PublisherDAO类下面的selectAllPublisher-->
+<mapper namespace="com.sky.mapper.CategoryMapper">
+
+</mapper>
