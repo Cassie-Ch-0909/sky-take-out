@@ -94,7 +94,7 @@ public class EmployeeController {
     @ApiOperation("新增员工")
     /*
      * @RequestBody 将客户端发送的HTTP请求体中的JSON或XML数据绑定到方法参数上。
-     * @RequestBody 将HTTP请求体中的数据转换为Java对象，并作为方法参数传递
+     * @RequestBody 将HTTP 请求体 中的数据转换为Java对象，并作为方法参数传递
      * */
     public Result save(@RequestBody EmployeeDTO employeeDTO) {
         // 这里的{}是一个占位符，在log日志中employeeDTO的内容会补充到{}的位置
@@ -115,5 +115,20 @@ public class EmployeeController {
         log.info("员工分页查询，参数为：{}", employeePageQueryDTO);
         PageResult pageResult = employeeService.pageQuery(employeePageQueryDTO);
         return Result.success(pageResult);
+    }
+
+    /**
+     * 启用禁用员工账号
+     * @param status
+     * @param id
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    @ApiOperation("启用禁用员工账号")
+    // 通过PathVariable来取@PostMapping("/status/{status}")中的路径参数
+    public Result startOrStop(@PathVariable Integer status, Long id){
+        log.info("启用禁用员工账号，参数为：{},{}",status,id);
+        employeeService.startOrStop(status,id);
+        return Result.success();
     }
 }

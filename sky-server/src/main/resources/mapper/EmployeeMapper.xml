@@ -6,6 +6,25 @@
 用于指定这个映射文件中定义的 SQL 语句和映射规则属于哪个 Java 接口或类。
 -->
 <mapper namespace="com.sky.mapper.EmployeeMapper">
+    <!--
+    parameterType="Employee" 表示该更新操作的参数类型是 Employee。
+    这意味着在执行该更新操作时，需要传递一个 Employee 对象作为参数给 SQL 语句。
+    -->
+    <update id="update" parameterType="Employee">
+        update employee
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="username != null">username = #{username},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="idNumber != null">id_Number = #{idNumber},</if>
+            <if test="updateTime != null">update_Time = #{updateTime},</if>
+            <if test="updateUser != null">update_User = #{updateUser},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        where id = #{id}
+    </update>
 
     <!--
     从 employee 表中查询数据，
