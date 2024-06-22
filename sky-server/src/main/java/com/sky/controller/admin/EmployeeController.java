@@ -144,4 +144,18 @@ public class EmployeeController {
         Employee employee = employeeService.getById(id);
         return Result.success(employee);
     }
+
+    /**
+     * 编辑员工信息
+     * @param employeeDTO
+     * @return
+     */
+    @PutMapping
+    @ApiOperation("编辑员工信息")
+    // 新增员工的时候封装了EmployeeDTO，新增员工和编辑员工的入参一样，因此使用EmployeeDTO
+    public Result update(@RequestBody EmployeeDTO employeeDTO){
+        log.info("编辑员工信息，参数为：{}",employeeDTO);
+        employeeService.update(employeeDTO);
+        return Result.success();
+    }
 }
