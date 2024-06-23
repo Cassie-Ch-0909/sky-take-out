@@ -9,6 +9,8 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * Author: Cassie
  * Date: 2024/6/22 20:58
@@ -52,4 +54,12 @@ public interface CategoryMapper {
      */
     @AutoFill(value = OperationType.UPDATE)
     void update(Category category);
+
+    /**
+     * 根据类型查询分类
+     *
+     * @param type
+     * @return
+     */
+    List<Category> list(Integer type);
 }
