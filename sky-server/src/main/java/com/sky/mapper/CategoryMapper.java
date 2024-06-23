@@ -45,7 +45,7 @@ public interface CategoryMapper {
     void deleteById(Long id);
 
     /**
-     * 根据id查询分类
+     * 根据id修改分类
      *
      * @param category
      * @return
